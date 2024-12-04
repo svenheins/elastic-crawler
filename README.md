@@ -18,6 +18,49 @@ Then create the .env file with the respective entries. The example.env serves as
 cp example.env .env
 ```
 
+### FSCrawler
+
+Ensure the following file structure: ('test' is the job_name in this case)
+
+```
+.
+├── config
+│   └── test
+│       └── _settings.yaml
+├── test-folder
+│   └── <your files>
+├── external
+│   └── <3rd party jars if needed>
+├── logs
+│   └── <fscrawler logs>
+└── docker-compose.yml
+```
+
+see also: https://fscrawler.readthedocs.io/en/latest/installation.html#using-docker-compose
+
+Then create the job_name -> \_settings.yaml (no ssl and no ocr for the first test, in order to keep thing simple)
+
+```
+---
+name: "test"
+fs:
+  indexed_chars: 100%
+  lang_detect: true
+  continue_on_error: true
+  ocr:
+    language: "eng"
+    enabled: false
+    pdf_strategy: "ocr_and_text"
+elasticsearch:
+  nodes:
+    - url: "http://elasticsearch:9200"
+  username: "elastic"
+  password: "changeme"
+  ssl_verification: false
+rest :
+  url: "http://fscrawler:8080"
+```
+
 ## Known Issues
 
 ### Disk Space

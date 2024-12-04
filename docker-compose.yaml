@@ -62,6 +62,23 @@ services:
       - https_proxy=${HTTPS_PROXY}
       - no_proxy=${NO_PROXY}
 
+  fscrawler:
+    image: dadoonet/fscrawler
+    container_name: fscrawler
+    environment:
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      - http_proxy=${HTTP_PROXY}
+      - https_proxy=${HTTPS_PROXY}
+      - no_proxy=${NO_PROXY}
+    volumes:
+      - ${PWD}/test-folder:/tmp/es:ro
+      - ${PWD}/config:/root/.fscrawler
+      - ${PWD}/logs:/usr/share/fscrawler/logs
+      - ${PWD}/external:/usr/share/fscrawler/external
+    command: fscrawler test --restart --rest
+
 # this defines the volume to permanently store the elasticsearch container data.
 volumes:
   esdata:
