@@ -1,6 +1,7 @@
 # Elastic-Crawler
 
-Elasticsearch + Kibana + FSCrawler
+Elasticsearch + Kibana + FSCrawler.
+
 This project was largely inspired by https://community.hetzner.com/tutorials/deploy-elk-stack-with-docker, just adding the proxy environment variables and continue from there towards integrating the fscrawler tool.
 
 ## Installation
@@ -11,7 +12,11 @@ run the following setup before running docker compose:
 mkdir esdata && sudo chown -R 1000:1000 esdata
 ```
 
-Then create the .env file with the respective
+Then create the .env file with the respective entries. The example.env serves as a template
+
+```
+cp example.env .env
+```
 
 ## Known Issues
 
