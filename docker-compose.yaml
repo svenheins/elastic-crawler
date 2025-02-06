@@ -81,5 +81,21 @@ services:
     command: fscrawler test --restart --rest
 
 # this defines the volume to permanently store the elasticsearch container data.
+  annotation_crawler:
+    build: 
+      context: ./services/annotation_crawler
+    container_name: annotation_crawler
+    environment:
+      - ELASTIC_HOST=http://elasticsearch:9200
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - WATCH_PATH=/tmp/es
+      - ELASTIC_INDEX=test
+      - http_proxy=${HTTP_PROXY}
+      - https_proxy=${HTTPS_PROXY}
+      - no_proxy=${NO_PROXY}
+    volumes:
+      - ${PWD}/test-folder:/tmp/es:ro
+
 volumes:
   esdata:
