@@ -1,0 +1,69 @@
+# This template shows common metadata fields that can be applied to files in a directory
+# All files in the directory and subdirectories where this YAML is placed will inherit these metadata
+
+# Project Information
+project:
+  name: "Example Project"
+  id: "PRJ-123"
+  description: "Brief description of the project"
+
+# Data Classification
+classification:
+  access_level: "public"  # public, internal, confidential
+  data_type: "research"   # research, documentation, raw_data, processed_data
+  sensitivity: "low"      # low, medium, high
+
+# Content Information
+content:
+  subject: "Machine Learning"
+  keywords: 
+    - "deep learning"
+    - "neural networks"
+    - "computer vision"
+  language: "en"
+  file_type: "dataset"    # dataset, paper, code, documentation
+
+# Temporal Information
+temporal:
+  created_date: "2025-01-01"
+  version: "1.0"
+  status: "active"        # draft, active, archived
+  expiry_date: "2026-01-01"  # optional
+
+# Attribution
+attribution:
+  author: "John Doe"
+  organization: "Research Lab"
+  contact_email: "john.doe@example.com"
+  license: "MIT"
+  citation: "Doe, J. (2025). Example Dataset. Research Lab."
+
+# Custom Fields
+custom:
+  experiment_id: "EXP-456"
+  equipment_used: "Microscope-A"
+  sample_type: "cell_culture"
+  protocol_reference: "PROT-789"
+
+# Quality Control
+quality:
+  reviewed_by: "Jane Smith"
+  review_date: "2025-01-15"
+  quality_score: 0.95
+  validation_status: "passed"
+
+# Related Resources
+related:
+  dependencies:
+    - "dataset-A"
+    - "protocol-B"
+  parent_project: "PARENT-PRJ-001"
+  associated_publications:
+    - "DOI: 10.1234/example.2025"
+
+# Technical Metadata
+technical:
+  format_version: "1.0"
+  processing_pipeline: "pipeline-v2"
+  software_version: "2.1.0"
+  hardware_config: "GPU-cluster-A"
