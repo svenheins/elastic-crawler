@@ -11,14 +11,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class IMSBMetadataHandler(FileSystemEventHandler):
+class MetadataHandler(FileSystemEventHandler):
     def __init__(self, es_client, watch_path, index_name="test"):
         self.es_client = es_client
         self.watch_path = os.path.abspath(watch_path)
         self.index_name = index_name
 
-    def process_imsb_yaml(self, yaml_path):
-        """Process an IMSB annotation YAML file and update related files in Elasticsearch."""
+    def process_metadata_yaml(self, yaml_path):
+        """Process an metadata annotation YAML file and update related files in Elasticsearch."""
         try:
             with open(yaml_path, 'r') as f:
                 metadata = yaml.safe_load(f)
@@ -39,7 +39,7 @@ class IMSBMetadataHandler(FileSystemEventHandler):
         """Recursively update all files in directory with the metadata."""
         for root, _, files in os.walk(directory):
             for filename in files:
-                if filename == 'imsb_annotation.yaml':
+                if filename == 'metadata_annotation.yaml':
                     continue  # Skip the annotation file itself
                 
                 file_path = os.path.join(root, filename)
@@ -49,9 +49,9 @@ class IMSBMetadataHandler(FileSystemEventHandler):
                 try:
                     doc = self.es_client.get(index=self.index_name, id=relative_path)
                     if doc['found']:
-                        # Update existing document with IMSB metadata
+                        # Update existing document with metadata
                         doc_source = doc['_source']
-                        doc_source['imsb_metadata'] = metadata
+                        doc_source['metadata'] = metadata
                         self.es_client.index(
                             index=self.index_name,
                             id=relative_path,
@@ -62,14 +62,14 @@ class IMSBMetadataHandler(FileSystemEventHandler):
                     logger.warning(f"Could not update metadata for {relative_path}: {str(e)}")
 
     def on_created(self, event):
-        if not event.is_directory and event.src_path.endswith('imsb_annotation.yaml'):
-            logger.info(f"Processing new IMSB annotation file: {event.src_path}")
-            self.process_imsb_yaml(event.src_path)
+        if not event.is_directory and event.src_path.endswith('metadata_annotation.yaml'):
+            logger.info(f"Processing new metadata annotation file: {event.src_path}")
+            self.process_metadata_yaml(event.src_path)
 
     def on_modified(self, event):
-        if not event.is_directory and event.src_path.endswith('imsb_annotation.yaml'):
-            logger.info(f"Processing modified IMSB annotation file: {event.src_path}")
-            self.process_imsb_yaml(event.src_path)
+        if not event.is_directory and event.src_path.endswith('metadata_annotation.yaml'):
+            logger.info(f"Processing modified metadata annotation file: {event.src_path}")
+            self.process_metadata_yaml(event.src_path)
 
 def main():
     # Elasticsearch configuration
@@ -90,19 +90,19 @@ def main():
     )
 
     # Initialize the event handler and observer
-    event_handler = IMSBMetadataHandler(es, watch_path, index_name)
+    event_handler = MetadataHandler(es, watch_path, index_name)
     observer = Observer()
     observer.schedule(event_handler, watch_path, recursive=True)
     observer.start()
 
-    # Initial scan for existing imsb_annotation.yaml files
-    logger.info("Performing initial scan for IMSB annotation files...")
+    # Initial scan for existing metadata_annotation.yaml files
+    logger.info("Performing initial scan for metadata annotation files...")
     for root, _, files in os.walk(watch_path):
         for filename in files:
-            if filename == 'imsb_annotation.yaml':
+            if filename == 'metadata_annotation.yaml':
                 yaml_path = os.path.join(root, filename)
-                logger.info(f"Processing existing IMSB annotation file: {yaml_path}")
-                event_handler.process_imsb_yaml(yaml_path)
+                logger.info(f"Processing existing metadata annotation file: {yaml_path}")
+                event_handler.process_metadata_yaml(yaml_path)
 
     try:
         while True:
