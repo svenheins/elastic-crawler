@@ -85,12 +85,14 @@ services:
     build: 
       context: ./services/annotation_crawler
     container_name: annotation_crawler
+    env_file: .env
     environment:
       - ELASTIC_HOST=http://elasticsearch:9200
-      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - WATCH_PATH=/tmp/es
       - ELASTIC_INDEX=test
+      - SCAN_INTERVAL_SECONDS=${SCAN_INTERVAL_SECONDS:-60}
       - http_proxy=${HTTP_PROXY}
       - https_proxy=${HTTPS_PROXY}
       - no_proxy=${NO_PROXY}
